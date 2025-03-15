@@ -3,10 +3,10 @@ import { Outlet } from "react-router";
 
 export function AuthLayout() {
   return (
-    <div className="min-h-screen grid grid-cols-2">
-      <div className="h-full border-r border-foreground bg-muted justify-between p-10 text-muted-foreground flex flex-col ">
-        <div className="flex items-center gap-3 text-lg text-foreground">
-          <Pizza className="size-5"/>
+    <div className="grid min-h-screen grid-cols-2 antialiased">
+      <div className="border-foreground bg-muted text-muted-foreground flex h-full flex-col justify-between border-r p-10">
+        <div className="text-foreground flex items-center gap-3 text-lg">
+          <Pizza className="size-5" />
           <span className="font-semibold">pizza.shop</span>
         </div>
         <footer className="text-sm">
@@ -14,7 +14,7 @@ export function AuthLayout() {
         </footer>
       </div>
 
-      <div className="flex items-center justify-center flex-col">
+      <div className="relative flex flex-col items-center justify-center">
         <Outlet />
       </div>
     </div>
