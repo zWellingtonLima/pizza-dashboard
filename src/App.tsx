@@ -17,19 +17,21 @@ export function App() {
     <BrowserRouter>
       <ThemeProvider storageKey="pizzashop-theme" defaultTheme="dark">
         <Toaster richColors />
-        <Routes>
-          <Route path="/" element={<AppLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="orders" element={<Orders />} />
-          </Route>
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route path="/" element={<AppLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="orders" element={<Orders />} />
+            </Route>
 
-          <Route element={<AuthLayout />}>
-            <Route path="sign-in" element={<SignIn />} />
-            <Route path="sign-up" element={<SignUp />} />
-          </Route>
+            <Route element={<AuthLayout />}>
+              <Route path="sign-in" element={<SignIn />} />
+              <Route path="sign-up" element={<SignUp />} />
+            </Route>
 
-          <Route path="*" element={<NotFoundErrorBoundary />} />
-        </Routes>
+            <Route path="*" element={<NotFoundErrorBoundary />} />
+          </Routes>
+        </QueryClientProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
