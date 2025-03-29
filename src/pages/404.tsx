@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-export function NotFound() {
+export function NotFoundErrorBoundary() {
   return (
     <>
       <title>Página não encontrada</title>
