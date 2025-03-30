@@ -1,9 +1,11 @@
 import { Label } from "@radix-ui/react-label";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { registerRestaurant } from "@/api/register-restaurant";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -11,7 +13,7 @@ const signUpForm = z.object({
   email: z.string().email(),
   restaurantName: z.string().min(3),
   managerName: z.string(),
-  phoneNumber: z.number(),
+  phoneNumber: z.string(),
 });
 
 type SignUpForm = z.infer<typeof signUpForm>;
@@ -25,17 +27,25 @@ export function SignUp() {
     formState: { isSubmitting },
   } = useForm<SignUpForm>();
 
+  const { mutateAsync: registerRestaurantFn } = useMutation({
+    mutationFn: registerRestaurant,
+  });
+
   const handleSignUp = async (data: SignUpForm) => {
-    // TODO: Verificar dados do formulário e redirecionar automaticamente para Dashboard
-    console.log(data);
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
     try {
+      await registerRestaurantFn({
+        email: data.email,
+        manager: data.managerName,
+        phone: data.phoneNumber,
+        restaurantName: data.restaurantName,
+      });
+
+      // TODO: Redirect user directly to /dashboard
+
       toast.success("Restaurante cadastrado com sucesso", {
         action: {
           label: "Entrar na sua conta",
-          onClick: () => navigate("/sign-in"),
+          onClick: () => navigate(`/sign-in?email=${data.email}`),
         },
         duration: 10000,
       });

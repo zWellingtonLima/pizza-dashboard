@@ -1,9 +1,11 @@
 import { Label } from "@radix-ui/react-label";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { signIn } from "@/api/sign-in";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -14,23 +16,35 @@ const signInForm = z.object({
 type SignInForm = z.infer<typeof signInForm>;
 
 export function SignIn() {
+  const [searchParams] = useSearchParams();
+
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<SignInForm>();
+  } = useForm<SignInForm>({
+    defaultValues: {
+      email: searchParams.get("email") ?? "",
+    },
+  });
+
+  const { mutateAsync: authenticate } = useMutation({
+    mutationFn: signIn,
+  });
 
   const handleSignIn = async (data: SignInForm) => {
-    console.log(data);
+    try {
+      await authenticate({ email: data.email });
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    toast.success("Enviamos um link de autenticação para o seu e-mail", {
-      action: {
-        label: "Reenviar",
-        onClick: () => handleSignIn(data),
-      },
-    });
+      toast.success("Enviamos um link de autenticação para o seu e-mail", {
+        action: {
+          label: "Reenviar",
+          onClick: () => handleSignIn(data),
+        },
+      });
+    } catch (error) {
+      toast.error("Credenciais inválidas.");
+    }
   };
 
   return (
